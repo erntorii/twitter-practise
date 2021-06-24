@@ -65,3 +65,30 @@ mv src/features/counterSlice.ts src/features/userSlice.ts
   - 正しく表示されない？
     - DevTools の右上、`Autoselect instances` 部分のプルダウンを確認
     - ↑ は、他にも store を持つ React App がブラウザで開かれている場合に、そちらが優先して表示されている可能性がある。
+
+## App コンポーネントで、`userSlice` の login/logout アクションを使用する
+
+### Import
+
+- firebase の認証機能を使いたいため、`auth` をインポート
+- その他、Redux の必要な機能や定義した変数、関数をインポート
+
+```tsx
+import React, { useEffect } from "react";
+import styles from "./App.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, login, logout } from "./features/userSlice";
+import { auth } from "./firebase";
+```
+
+### `useSelector`, `useDispatch` の使用
+
+```tsx
+const App = () => {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+```
+
+### `useEffect` を用いて、認証のアクションを定義
+
+- [App.tsx](./src/App.tsx)
