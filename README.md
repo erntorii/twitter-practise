@@ -92,3 +92,55 @@ const App = () => {
 ### `useEffect` を用いて、認証のアクションを定義
 
 - [App.tsx](./src/App.tsx)
+
+## `Auth.tsx` で認証ページを作成する
+
+### Material-UI のテンプレート利用
+
+- [Material-UI](https://material-ui.com) -> 「GET STARTED」
+- Material-UI の テンプレートから使いたいものを選び、ソースコードをまずは丸ごとコピーする。
+- save して起動してあるローカルサーバを見にいくと、テンプレートが反映されている。
+  - 関数をアロー関数表記に変更
+  - 最下部に `export default Auth;` を追記
+
+### `backgroundImage` 設定
+
+- [Unsplash](https://unsplash.com/) のトップページから好きな画像を選び 画像アドレス をコピーして、  
+  `backgroundImage` の url を置き換える。
+
+### Google アカウント認証機能
+
+- Auth コンポーネントに、以下を追加
+
+```tsx
+const signInGoogle = async () => {
+  await auth.signInWithPopup(provider).catch((err) => alert(err.message));
+};
+```
+
+- provider は、`firebase.ts` で作成した以下が渡されている
+
+```tsx
+// Google 認証機能に必要。
+export const provider = new firebase.auth.GoogleAuthProvider();
+```
+
+- ビュー側では、Button コンポーネントの属性として、あらかじめ作成しておいた関数 `onClick={signInGoogle}` を呼ばれるようにする
+- Button コンポーネントの `type` 属性は不要なため削除する
+
+### Google アカウント認証機能を有効化する
+
+- Firebase コンソールのサイドメニューにて -> `Authentication` -> タブバー `Sign-in method` 選択
+- Google 項目にて、`有効にする` を選択 + プロジェクトのサポートメールに自身のメールアドレスを選択 -> 保存
+
+### 実際に Google アカウントでログインしてみる
+
+- ログイン後、Redux DevTools で、userSlice の各オブジェクトが更新されているか確認してみる
+- サインアウトボタンは未設定のため、再度 Auth コンポーネント表示のためには、  
+  Chrome 設定 -> プライバシーとセキュリティ -> 閲覧履歴データの削除 -> Cookie と他サイトのデータ -> データを削除  
+  を行っておく
+
+### Email + Password 認証機能
+
+- Firebase コンソールにて、Google アカウント認証機能の有効化と同じ流れで、  
+  `メール/パスワード` を `有効にする` で保存(`メールリンク(パスワードなしでログイン)`は今回は特に有効にしない)
