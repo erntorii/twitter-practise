@@ -140,7 +140,106 @@ export const provider = new firebase.auth.GoogleAuthProvider();
   Chrome 設定 -> プライバシーとセキュリティ -> 閲覧履歴データの削除 -> Cookie と他サイトのデータ -> データを削除  
   を行っておく
 
+### 仮サインアウトボタンの作成
+
+`Feed.tsx`
+
+```tsx
+import { auth } from "../firebase";
+```
+
+```
+return(
+  ...
+      <button onClick={() => auth.signOut()}>Logout</button>
+```
+
 ### Email + Password 認証機能
+
+- email と password の state をそれぞれ定義する
+
+```tsx
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+```
+
+- テキストフィールドに上記が対応するように追加(パスワードも同様に)
+
+```tsx
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+```
+
+- login モード/register モードを判別する state を定義する
+
+```tsx
+const [isLogin, setIsLogin] = useState(true);
+```
+
+- login 用の関数の作成
+
+```tsx
+const signInEmail = async () => {
+  await auth.signInWithEmailAndPassword(email, password);
+};
+```
+
+- register 用の関数の作成
+
+```tsx
+const signUpEmail = async () => {
+  await auth.createUserWithEmailAndPassword(email, password);
+};
+```
+
+- login モード/register モードの切り替え
+
+タイトル
+
+```tsx
+{
+  isLogin ? "Login" : "Register";
+}
+```
+
+切り替え機能
+
+```tsx
+<span onClick={() => setIsLogin(!isLogin)}>
+  {isLogin ? "Create new account ?" : "Back to login"}
+</span>
+```
+
+`<button>` タグに追加(`onClick` を設定するので、`type="submit"` は不要なため削除する)  
+元の関数が、`async/await` が使われているため、実際に使う場面でも`async/await` を使う必要がある
+
+```tsx
+              onClick={
+                isLogin
+                  ? async () => {
+                      try {
+                        await signInEmail();
+                      } catch (err) {
+                        alert(err.message);
+                      }
+                    }
+                  : async () => {
+                      try {
+                        await signUpEmail();
+                      } catch (err) {
+                        alert(err.message);
+                      }
+                    }
+              }
+```
+
+- 記述後、Redux DevTools を用いてサインアップできるか試してみる
+
+- Firebase コンソール -> Authentication -> Users にて、登録されたユーザーの一覧を参照できる
+
+### Email + Password 認証機能を有効化する
 
 - Firebase コンソールにて、Google アカウント認証機能の有効化と同じ流れで、  
   `メール/パスワード` を `有効にする` で保存(`メールリンク(パスワードなしでログイン)`は今回は特に有効にしない)
+
+## `Auth.tsx` で、ユーザー情報の `photoUrl`, `displayName` が設定できるように機能追加する
