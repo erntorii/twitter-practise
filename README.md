@@ -243,3 +243,38 @@ const signUpEmail = async () => {
   `メール/パスワード` を `有効にする` で保存(`メールリンク(パスワードなしでログイン)`は今回は特に有効にしない)
 
 ## `Auth.tsx` で、ユーザー情報の `photoUrl`, `displayName` が設定できるように機能追加する
+
+### state 作成
+
+```tsx
+const [username, setUsername] = useState("");
+const [avatarImage, setAvatarImage] = useState<File | Null>(null);
+```
+
+### Avatar 画像を登録/変更する ハンドラー作成
+
+```tsx
+const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files![0]) {
+    setAvatarImage(e.target.files![0]);
+    e.target.value = "";
+  }
+};
+```
+
+- `files![0]` の `!` は、typescript のコンパイル時に、オブジェクトが `null` または `undefined` ではないことを示すもの。
+  - `!` がない場合、オブジェクトに null の可能性ができ、コンパイルが通らなくなってしまう。
+  - onChange で渡しているハンドラーで、何らかのオブジェクトがすでに入っていると予想されるため。
+- 最後の空文字で初期化する部分は、同じファイルを選択した際などに onChange が反応しない仕様となっており、  
+  毎回反応するように仕様変更したいため行っている。
+
+### Fire Storage へのファイルアップロードを設定する
+
+- [Auth.tsx](./src/components/Auth.tsx)
+  - signUpEmail の部分
+
+### アップロードした displayName や photoURL を userSlice の方にも反映させる
+
+- [userSlice](./src/features/userSlice.ts)
+  - interface の作成
+  - updateUserProfile の作成
