@@ -278,3 +278,16 @@ const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 - [userSlice](./src/features/userSlice.ts)
   - interface の作成
   - updateUserProfile の作成
+
+## Cloud Storage を使えるようにする
+
+Firebase コンソールサイドメニュー -> Storage -> 始める -> 次へ -> 完了
+
+## ビューで usename と avatar の設定フォームを作成する
+
+- [Auth.tsx](./src/components/Auth.tsx)
+  - `<label>`で`<input>`を囲むことによって、ラベルクリックでファイルを input することができる
+
+## フォームの入力が完了していない場合に、`login/register` のボタンを無効化するようにする
+
+## パスワードリセット機能
