@@ -297,3 +297,22 @@ Firebase コンソールサイドメニュー -> Storage -> 始める -> 次へ 
 - テストモードで作成しておく
 - 新規ツイートの投稿、画像アップロードにこのデータベースを使う
   - 画像に関しては、画像データを Cloud Storage にアップロードし、その url をテキストデータとしてデータベースに保存する。
+
+## デプロイ前に
+
+- Cloud Firestore のセキュリティルールを編集する
+  - デフォルトでは、1 ヶ月間誰でもデータベースにアクセスできる仕様になっている
+  - これを、ログインしたユーザーのみが、posts の collection とそれに紐づいているデータベースの構造にアクセスできるよう変更する
+
+```
+service cloud.firestore {
+	match /database/{database}/documents {
+  	function isAuthenticated() {
+    	return request.auth != null;
+    }
+    match /posts/{postsID=**} {
+    	allow read, create: if isAuthenticated();
+    }
+  }
+}
+```
