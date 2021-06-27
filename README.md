@@ -316,3 +316,31 @@ service cloud.firestore {
   }
 }
 ```
+
+## デプロイ
+
+- Firebase コンソールサイドバー -> Hosting -> 始める
+  - firebase-tools がインストール済みの場合はスキップで OK
+
+```zsh
+yarn add firebase-tools
+```
+
+- デプロイのために build する
+
+```zsh
+yarn build
+```
+
+- プロジェクトの初期化
+  - Hosting にチェック
+
+```zsh
+firebase init
+```
+
+- d
+
+```zsh
+firebase deploy
+```
