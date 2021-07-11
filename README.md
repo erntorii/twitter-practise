@@ -306,7 +306,7 @@ Firebase コンソールサイドメニュー -> Storage -> 始める -> 次へ 
 
 ```
 service cloud.firestore {
-	match /database/{database}/documents {
+	match /databases/{database}/documents {
   	function isAuthenticated() {
     	return request.auth != null;
     }
